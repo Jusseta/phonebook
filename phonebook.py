@@ -1,7 +1,7 @@
 import json
 
 
-PHONEBOOK_FILE = 'phonebook.txt'
+PHONEBOOK_FILE = 'phonebook.json'
 
 
 def load_phonebook():
@@ -19,10 +19,16 @@ def save_phonebook(phonebook):
         json.dump(phonebook, file)
 
 
-def display_contacts(contacts):
-    """Вывод списка контактов"""
-    for index, contact in enumerate(contacts):
-        print(f'{index}. {contact}')
+def display_contacts(contacts, page):
+    """Вывод списка контактов постранично"""
+    page_size = 10
+    if contacts:
+        start_index = (page - 1) * page_size
+        end_index = start_index + page_size
+        for index, contact in enumerate(contacts[start_index:end_index], start=start_index + 1):
+            print(f'{index}. {contact}')
+    else:
+        print('В справочнике пока нет контактов')
 
 
 def add_contact(phonebook):
@@ -79,7 +85,7 @@ def main():
     phonebook = load_phonebook()
 
     while True:
-        print('\nМеню:')
+        print('\nМеню:\n')
         print('1. Вывести контакты')
         print('2. Добавить контакт')
         print('3. Редактировать контакт')
@@ -88,7 +94,8 @@ def main():
 
         choice = input('Выберите действие: ')
         if choice == '1':
-            display_contacts(phonebook)
+            page = int(input("Введите номер страницы: "))
+            display_contacts(phonebook, page)
         elif choice == '2':
             add_contact(phonebook)
         elif choice == '3':
